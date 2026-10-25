@@ -1,278 +1,321 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Redukcyjny 93kg -> 76.6kg</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --border: #334155;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding: 16px; line-height: 1.5; }
-        .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 24px; padding: 20px; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
-        h1 { font-size: 1.5rem; margin-bottom: 8px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p.subtitle { color: var(--text-muted); font-size: 0.9rem; }
-        
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
-        .stat-card { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-        .stat-card h3 { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-        .stat-card .value { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
-        
-        .progress-container { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; }
-        .progress-bar-bg { background: var(--border); height: 10px; border-radius: 5px; overflow: hidden; margin-top: 8px; }
-        .progress-bar-fill { background: var(--accent-gradient); height: 100%; width: 0%; transition: width 0.5s ease; }
-        
-        .table-responsive { width: 100%; overflow-x: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; min-width: 600px; }
-        th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        th { background: rgba(51, 65, 85, 0.4); color: var(--text-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
-        tr:hover { background: rgba(51, 65, 85, 0.2); }
-        
-        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #2563eb; cursor: pointer; }
-        input[type="number"] { background: var(--bg-color); border: 1px solid var(--border); color: var(--text-color); padding: 6px 10px; border-radius: 6px; width: 85px; font-weight: 600; text-align: center; }
-        input[type="number"]:focus { outline: none; border-color: var(--accent); }
-        
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-        .badge-on-track { background: rgba(34, 197, 94, 0.2); color: var(--success); }
-        .badge-ahead { background: rgba(56, 189, 248, 0.2); color: var(--accent); }
-        .badge-behind { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .badge-pending { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
-        
-        .actions-bar { margin-top: 16px; display: flex; justify-content: flex-end; gap: 10px; }
-        button { background: var(--border); color: var(--text-color); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: background 0.2s; }
-        button:hover { background: #475569; }
-        button.btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        button.btn-danger:hover { background: rgba(239, 68, 68, 0.4); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Aplikacja do planowania i kontroli redukcji masy ciała oraz tkanki tłuszczowej. Sobotnie ważenia, kamienie milowe i automatyczna korekcja celu przy obsunięciach." />
+  <title>Redukcja Pro – Sobotnie Ważenia i Kamienie Milowe</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1>Redukcja 93kg ➔ 76.6kg</h1>
-        <p class="subtitle">Cel: 15% BF do 23.04.2027 | Sobotnie ważenie & Checklista</p>
-    </header>
-
-    <div class="dashboard-grid">
-        <div class="stat-card">
-            <h3>Start / Obecnie</h3>
-            <div class="value" id="currentWeightDisplay">93.0 kg</div>
+  <!-- Top App Bar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <img src="./icon.svg" alt="Logo Redukcja Pro" class="brand-icon" />
+        <div>
+          <h1>Redukcja Pro</h1>
+          <p class="brand-subtitle">Kamienie milowe &bull; Sobotnie ważenia</p>
         </div>
-        <div class="stat-card">
-            <h3>Zrzucono</h3>
-            <div class="value" id="totalLostDisplay">0.0 kg</div>
-        </div>
-        <div class="stat-card">
-            <h3>Ukończone tygodnie</h3>
-            <div class="value" id="completedWeeksDisplay">0 / 26</div>
-        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btnInstallPwa" class="btn btn-accent btn-sm" type="button" title="Zainstaluj aplikację na telefonie z Androidem">
+          <span class="icon-inline">📲</span> Zainstaluj (Android)
+        </button>
+        <button id="btnDemoData" class="btn btn-outline btn-sm" type="button" title="Wczytaj przykładowy plan z obsunięciem w 3. tygodniu">
+          Przykład
+        </button>
+      </div>
     </div>
+  </header>
 
-    <div class="progress-container">
-        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
-            <span>Postęp całkowity</span>
-            <span id="progressPercent">0%</span>
-        </div>
-        <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="progressBar"></div>
-        </div>
-    </div>
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Navigation Tabs (Mobile-friendly) -->
+    <nav class="tabs-nav" aria-label="Główna nawigacja">
+      <button class="tab-btn active" data-tab="dashboard" type="button">
+        <span>📊</span> Pulpit i Soboty
+      </button>
+      <button class="tab-btn" data-tab="checkin" type="button">
+        <span>⚖️</span> Sobotnie Ważenie
+      </button>
+      <button class="tab-btn" data-tab="plan" type="button">
+        <span>🎯</span> Parametry i Cel
+      </button>
+      <button class="tab-btn" data-tab="data" type="button">
+        <span>💾</span> Dane i Instalacja
+      </button>
+    </nav>
 
-    <div class="table-responsive">
-        <table id="checklistTable">
+    <!-- Status / Correction Banner -->
+    <section id="correctionBanner" class="status-banner" aria-live="polite"></section>
+
+    <!-- TAB 1: DASHBOARD & MILESTONES -->
+    <section id="tab-dashboard" class="tab-panel active">
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid" id="kpiGrid"></div>
+
+      <!-- Next / Current Saturday Spotlight -->
+      <div class="card spotlight-card" id="nextSaturdayCard"></div>
+
+      <!-- Progress Chart -->
+      <div class="card">
+        <div class="card-header-row">
+          <div>
+            <h2>Ścieżka redukcji i korekcja celu</h2>
+            <p class="text-muted">Porównanie planu pierwotnego, planu po korekcji i sobotnich pomiarów</p>
+          </div>
+          <div class="chart-toggle" role="group" aria-label="Wybór metryki wykresu">
+            <button type="button" class="btn-chip active" data-chart-mode="weight">Waga (kg)</button>
+            <button type="button" class="btn-chip" data-chart-mode="bf">Tkanka tł. (%)</button>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="progressChart" width="800" height="340"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><i class="dot dot-base"></i> Plan pierwotny</span>
+          <span class="legend-item"><i class="dot dot-corrected"></i> Plan skorygowany</span>
+          <span class="legend-item"><i class="dot dot-actual"></i> Sobotnie pomiary</span>
+          <span class="legend-item"><i class="dot dot-slip"></i> Obsunięcie</span>
+        </div>
+      </div>
+
+      <!-- Milestones Table / Cards -->
+      <div class="card">
+        <div class="card-header-row">
+          <div>
+            <h2>Harmonogram sobotnich kamieni milowych</h2>
+            <p class="text-muted" id="milestoneSubheader">Lista wszystkich sobotnich ważeń z automatyczną korekcją celu</p>
+          </div>
+          <div class="strategy-quick-switch">
+            <label for="quickCorrectionMode" class="sr-only">Tryb korekcji</label>
+            <select id="quickCorrectionMode" class="input-select-sm" title="Wybierz sposób korekcji po obsunięciu">
+              <option value="recalculate_rate">Korekcja tempa (stały termin)</option>
+              <option value="extend_time">Korekcja terminu (stałe tempo)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="milestones-table" id="milestonesTable">
             <thead>
-                <tr>
-                    <th style="width: 50px;">Done</th>
-                    <th>Tydzień / Data</th>
-                    <th>Cel wagowy</th>
-                    <th>Twoja waga (Sobota)</th>
-                    <th>Status korekcji</th>
-                    <th>Zadanie nawykowe</th>
-                </tr>
+              <tr>
+                <th>Tydz.</th>
+                <th>Data (Sobota)</th>
+                <th>Plan pierwotny</th>
+                <th>Cel po korekcji</th>
+                <th>Wynik sobotni</th>
+                <th>Odchylenie</th>
+                <th>Status</th>
+                <th>Akcja</th>
+              </tr>
             </thead>
-            <tbody>
-                <!-- Generowane dynamicznie -->
-            </tbody>
-        </table>
+            <tbody id="milestonesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: SATURDAY WEIGH-IN FORM -->
+    <section id="tab-checkin" class="tab-panel">
+      <div class="grid-2col">
+        <div class="card">
+          <h2>⚖️ Zapisz sobotnie ważenie</h2>
+          <p class="text-muted">Wprowadź wynik porannego ważenia na czczo w sobotę. Jeśli waga odbiega od celu, aplikacja automatycznie przeliczy kolejne kamienie milowe.</p>
+
+          <form id="checkinForm" class="form-stack">
+            <div class="form-group">
+              <label for="checkinWeekSelect">Wybierz sobotę (kamień milowy)</label>
+              <select id="checkinWeekSelect" required></select>
+            </div>
+
+            <div class="target-preview-box" id="checkinTargetPreview"></div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="checkinWeight">Zmierzona waga (kg) *</label>
+                <input type="number" id="checkinWeight" step="0.1" min="30" max="300" required placeholder="np. 88.4" />
+              </div>
+              <div class="form-group">
+                <label for="checkinBf">Tkanka tłuszczowa (%) <span class="label-opt">(opcjonalnie)</span></label>
+                <input type="number" id="checkinBf" step="0.1" min="3" max="70" placeholder="Wyliczy się automatycznie" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="checkinNote">Notatka z tygodnia (samopoczucie, trening, dieta)</label>
+              <input type="text" id="checkinNote" maxlength="120" placeholder="np. Więcej wody po piątkowej kolacji, 4 treningi" />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-block">Zapisz pomiar i przelicz kamienie milowe</button>
+              <button type="button" id="btnDeleteCheckin" class="btn btn-danger-outline" style="display: none;">Usuń ten pomiar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>📈 Historia zapisanych pomiarów</h2>
+          <p class="text-muted">Wszystkie pomiary są trwale zapisywane w pamięci telefonu / przeglądarki.</p>
+          <div id="checkinsHistoryList" class="history-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PLAN CONFIGURATION -->
+    <section id="tab-plan" class="tab-panel">
+      <div class="grid-2col">
+        <div class="card">
+          <h2>🎯 Twoje parametry i cel redukcji</h2>
+          <p class="text-muted">Podaj dane wejściowe. Aplikacja wyliczy beztłuszczową masę ciała (LBM), wagę docelową oraz cotygodniowe sobotnie kamienie milowe.</p>
+
+          <form id="planForm" class="form-stack">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="inputAge">Wiek (lata) *</label>
+                <input type="number" id="inputAge" min="14" max="100" step="1" required />
+              </div>
+              <div class="form-group">
+                <label for="inputStartDate">Data startu planu *</label>
+                <input type="date" id="inputStartDate" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="inputStartWeight">Aktualna waga początkowa (kg) *</label>
+                <input type="number" id="inputStartWeight" min="35" max="300" step="0.1" required />
+              </div>
+              <div class="form-group">
+                <label for="inputStartBf">Aktualna tkanka tłuszczowa (%) *</label>
+                <input type="number" id="inputStartBf" min="4" max="70" step="0.1" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="inputTargetBf">Docelowa tkanka tłuszczowa (%) *</label>
+                <input type="number" id="inputTargetBf" min="3" max="60" step="0.1" required />
+              </div>
+              <div class="form-group">
+                <label for="inputDurationWeeks">Czas na osiągnięcie celu (tygodnie / soboty) *</label>
+                <input type="number" id="inputDurationWeeks" min="1" max="104" step="1" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="inputCorrectionMode">Strategia korekcji przy obsunięciach</label>
+                <select id="inputCorrectionMode">
+                  <option value="recalculate_rate">Korekcja tempa (zachowaj termin końcowy, zwiększ spadek tygodniowy)</option>
+                  <option value="extend_time">Korekcja terminu (zachowaj bezpieczne tempo, wydłuż o kolejne soboty)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="inputTolerance">Tolerancja wagi w sobotę (kg)</label>
+                <input type="number" id="inputTolerance" min="0" max="2" step="0.05" value="0.15" />
+                <small class="form-hint">Odchylenie powyżej tej wartości oznacza obsunięcie kamienia milowego.</small>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Zapisz parametry i aktualizuj plan</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>🔬 Kalkulacja składu ciała i metabolizmu</h2>
+          <p class="text-muted">Szczegółowa analiza Twojego planu na podstawie podanego wieku, wagi i poziomu tkanki tłuszczowej.</p>
+          <div id="bodyCompositionSummary" class="comp-summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: DATA STORAGE, BACKUP & ANDROID INSTALL -->
+    <section id="tab-data" class="tab-panel">
+      <div class="grid-2col">
+        <div class="card">
+          <h2>💾 Przechowywanie danych i kopia zapasowa</h2>
+          <p class="text-muted">Twoje pomiary są automatycznie zapisywane w pamięci lokalnej urządzenia (<code>localStorage</code>). Możesz również pobrać plik kopii zapasowej lub przenieść dane na inny telefon.</p>
+
+          <div class="storage-status-box" id="storageStatusBox"></div>
+
+          <div class="action-buttons-stack">
+            <button type="button" id="btnExportJson" class="btn btn-primary">
+              📥 Pobierz kopię zapasową (JSON)
+            </button>
+            <button type="button" id="btnExportCsv" class="btn btn-outline">
+              📊 Eksportuj tabelę pomiarów (CSV / Excel)
+            </button>
+            <label for="inputImportJson" class="btn btn-outline file-label">
+              📤 Wczytaj kopię zapasową z pliku (JSON)
+              <input type="file" id="inputImportJson" accept=".json,application/json" hidden />
+            </label>
+            <hr class="divider" />
+            <button type="button" id="btnResetAll" class="btn btn-danger-outline">
+              🗑️ Wyczyść wszystkie pomiary i zresetuj aplikację
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>📱 Instalacja na Androidzie i GitHub Pages</h2>
+          <div class="guide-steps">
+            <div class="guide-block">
+              <h3>1. Jak zainstalować aplikację na telefonie z Androidem?</h3>
+              <ol>
+                <li>Otwórz adres swojej aplikacji w przeglądarce <strong>Google Chrome</strong> na telefonie z Androidem.</li>
+                <li>Kliknij przycisk <strong>„📲 Zainstaluj (Android)”</strong> w prawym górnym rogu aplikacji (lub otwórz menu Chrome <strong>⋮</strong> i wybierz <strong>„Dodaj do ekranu głównego” / „Zainstaluj aplikację”</strong>).</li>
+                <li>Aplikacja pojawi się jako pełnoprawna ikona <strong>Redukcja Pro</strong> na pulpicie telefonu i działa również <strong>offline</strong>!</li>
+              </ol>
+            </div>
+            <div class="guide-block">
+              <h3>2. Jak umieścić aplikację za darmo na GitHub Pages?</h3>
+              <ol>
+                <li>Utwórz nowe repozytorium na GitHubie (np. <code>redukcja-pro</code>) i prześlij wszystkie pliki z tego folderu (<code>index.html</code>, <code>styles.css</code>, <code>app.js</code>, <code>manifest.json</code>, <code>sw.js</code>, ikony).</li>
+                <li>Wejdź w zakładkę <strong>Settings &rarr; Pages</strong> w swoim repozytorium.</li>
+                <li>W sekcji <strong>Build and deployment (Source)</strong> wybierz <strong>Deploy from a branch</strong>, wskaż gałąź <code>main</code> (folder <code>/root</code>) i kliknij <strong>Save</strong>.</li>
+                <li>Po ok. 60 sekundach Twoja aplikacja będzie dostępna pod adresem <code>https://twoj-login.github.io/redukcja-pro/</code> z obsługą HTTPS i PWA!</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for Android Installation Instructions (fallback when native prompt isn't triggered yet) -->
+  <div id="installModal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+      <div class="modal-header">
+        <h3 id="installModalTitle">📲 Instalacja na telefonie Android</h3>
+        <button type="button" id="btnCloseModal" class="btn-icon" aria-label="Zamknij">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Aby zainstalować <strong>Redukcja Pro</strong> jako aplikację na telefonie z systemem Android:</p>
+        <ol class="modal-steps">
+          <li>Upewnij się, że strona jest otwarta w przeglądarce <strong>Chrome</strong> (przez HTTPS, np. na GitHub Pages).</li>
+          <li>Dotknij ikony menu <strong>⋮</strong> (trzy kropki w prawym górnym rogu przeglądarki).</li>
+          <li>Wybierz opcję <strong>„Zainstaluj aplikację”</strong> lub <strong>„Dodaj do ekranu głównego”</strong>.</li>
+          <li>Potwierdź klikając <strong>Zainstaluj</strong>. Ikona pojawi się wśród Twoich aplikacji!</li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnModalOk" class="btn btn-primary btn-block">Rozumiem</button>
+      </div>
     </div>
+  </div>
 
-    <div class="actions-bar">
-        <button class="btn-danger" onclick="resetData()">Resetuj dane</button>
-    </div>
-</div>
+  <!-- Toast notification -->
+  <div id="toast" class="toast" aria-live="polite" hidden></div>
 
-<script>
-    // Rejestracja Service Workera dla trybu PWA (offline)
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker zarejestrowany poprawnie.'))
-        .catch(err => console.log('Błąd rejestracji Service Workera:', err));
-    }
-
-    const startDate = new Date(2026, 9, 26); 
-    const startWeight = 93.0;
-    const targetWeight = 76.6;
-    const totalWeeks = 26;
-    const weightLossPerWeek = (startWeight - targetWeight) / totalWeeks;
-
-    const weeksData = [];
-    let curr = new Date(startDate);
-    for(let i=1; i<=totalWeeks; i++) {
-        let startWk = new Date(curr);
-        curr.setDate(curr.getDate() + 6);
-        let endWk = new Date(curr);
-        curr.setDate(curr.getDate() + 1);
-
-        let targetW = +(startWeight - (weightLossPerWeek * i)).toFixed(1);
-        if(i === totalWeeks) targetW = targetWeight;
-
-        weeksData.push({
-            week: i,
-            dates: `${formatDate(startWk)} - ${formatDate(endWk)}`,
-            target: targetW,
-            task: getTaskDescription(i)
-        });
-    }
-
-    function formatDate(d) {
-        return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
-    }
-
-    function getTaskDescription(week) {
-        const tasks = [
-            "Uruchomienie logistyki cateringu (3000 kcal/2 dni) + Bakoma wieczorem.",
-            "Pilnowanie nawodnienia (min. 3L wody) + włączenie pyłku sosny.",
-            "Nawyk 8000-10000 kroków codziennie w dni nietreningowe.",
-            "Pierwsze podsumowanie miesiąca – weryfikacja spadku wagi.",
-            "Pilnowanie stałych godzin snu i regularnego Sleep-era.",
-            "Zwiększenie intensywności progresji w kalistenice (3x w tygodniu).",
-            "Analiza techniki wykonywanych ćwiczeń (pompki, podciąganie).",
-            "Przetrwanie okresu przedświątecznego bez podjadania.",
-            "Kontrola świąteczna – utrzymanie deficytu lub powrót od razu na tory.",
-            "Sylwestrowy reset i dyscyplina suplementacyjna w Nowym Roku.",
-            "Weryfikacja obwodów ciała (pas, klatka, ramiona).",
-            "Półmetek I kwartału – utrwalenie nawyku kroków w pracy.",
-            "Przegląd suplementacji – uzupełnienie apteczki na kolejne miesiące.",
-            "Dodanie 15-minutowego rozciągania kręgosłupa po pracy siedzącej.",
-            "Kontrola energii i libido – weryfikacja pyłku sosny i Tribulonu.",
-            "Utrzymanie tempa spadku – w razie potrzeby więcej spacerów.",
-            "Zamknięcie 4 miesiąca – spadek o ponad 10 kg za Tobą!",
-            "Ocena stawów i ścięgien – wsparcie kolagenem przy kalistenice.",
-            "Wiosenne ożywienie – wydłużenie weekendowych spacerów.",
-            "Kontrola składu ciała i sprawdzenie ubytku tłuszczu z brzucha.",
-            "Pilnowanie snu ze Sleep-erem w okresie przesilenia wiosennego.",
-            "Próg poniżej 80 kg – symboliczny moment przełomowy!",
-            "Święta Wielkanocne – pełna kontrola logistyki posiłków.",
-            "Ostatnia prosta – maksymalne skupienie na treningach.",
-            "Ostatnie szlify – waga oscyluje bardzo blisko celu.",
-            "Finał! Osiągnięcie 15% BF i świętowanie sukcesu (23 kwietnia 2027)."
-        ];
-        return tasks[week-1] || "Konsekwencja w planie.";
-    }
-
-    function initTable() {
-        const tbody = document.querySelector('#checklistTable tbody');
-        tbody.innerHTML = '';
-        let savedData = JSON.parse(localStorage.getItem('red_data') || '{}');
-
-        weeksData.forEach(w => {
-            let rowData = savedData[w.week] || { checked: false, weight: '' };
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input type="checkbox" data-week="${w.week}" class="chk-box" ${rowData.checked ? 'checked' : ''}></td>
-                <td><strong>Tydzień ${w.week}</strong><br><small style="color:var(--text-muted);">${w.dates}</small></td>
-                <td>${w.target} kg</td>
-                <td><input type="number" step="0.1" class="weight-input" data-week="${w.week}" value="${rowData.weight || ''}" placeholder="np. 92.5"></td>
-                <td><span class="badge badge-pending" id="badge-${w.week}">Oczekiwanie</span></td>
-                <td style="font-size:0.85rem; color:var(--text-muted);">${w.task}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        attachEvents();
-        updateDashboard();
-    }
-
-    function attachEvents() {
-        document.querySelectorAll('.chk-box').forEach(chk => chk.addEventListener('change', saveData));
-        document.querySelectorAll('.weight-input').forEach(inp => inp.addEventListener('input', saveData));
-    }
-
-    function saveData() {
-        let dataToSave = {};
-        document.querySelectorAll('#checklistTable tbody tr').forEach((tr, index) => {
-            let week = index + 1;
-            let checked = tr.querySelector('.chk-box').checked;
-            let weight = tr.querySelector('.weight-input').value;
-            dataToSave[week] = { checked, weight };
-        });
-        localStorage.setItem('red_data', JSON.stringify(dataToSave));
-        updateDashboard();
-    }
-
-    function updateDashboard() {
-        let savedData = JSON.parse(localStorage.getItem('red_data') || '{}');
-        let completedCount = 0;
-        let lastWeight = startWeight;
-
-        weeksData.forEach(w => {
-            let d = savedData[w.week];
-            let badge = document.getElementById(`badge-${w.week}`);
-            if(!badge) return;
-
-            if(d && d.checked) completedCount++;
-
-            if(d && d.weight && !isNaN(parseFloat(d.weight))) {
-                let wVal = parseFloat(d.weight);
-                lastWeight = wVal;
-                let diff = +(wVal - w.target).toFixed(1);
-                if(diff <= -0.5) {
-                    badge.className = "badge badge-ahead";
-                    badge.innerText = `Super (${diff}kg)`;
-                } else if(diff >= 0.8) {
-                    badge.className = "badge badge-behind";
-                    badge.innerText = `Opóźnienie (+${diff}kg)`;
-                } else {
-                    badge.className = "badge badge-on-track";
-                    badge.innerText = "Plan wykonany";
-                }
-            } else {
-                badge.className = "badge badge-pending";
-                badge.innerText = "Brak pomiaru";
-            }
-        });
-
-        document.getElementById('currentWeightDisplay').innerText = `${lastWeight.toFixed(1)} kg`;
-        let lost = +(startWeight - lastWeight).toFixed(1);
-        document.getElementById('totalLostDisplay').innerText = `${lost > 0 ? '+' : ''}${lost} kg`;
-        document.getElementById('completedWeeksDisplay').innerText = `${completedCount} / ${totalWeeks}`;
-
-        let percent = Math.round((completedCount / totalWeeks) * 100);
-        document.getElementById('progressBar').style.width = `${percent}%`;
-        document.getElementById('progressPercent').innerText = `${percent}%`;
-    }
-
-    function resetData() {
-        if(confirm("Czy na pewno chcesz zresetować wszystkie zapisane dane i wagi?")) {
-            localStorage.removeItem('red_data');
-            initTable();
-        }
-    }
-
-    window.onload = initTable;
-</script>
+  <script src="./app.js"></script>
 </body>
 </html>

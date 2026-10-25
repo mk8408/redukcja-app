@@ -1,0 +1,32 @@
+{
+  "name": "Redukcja Pro – Kamienie Milowe i Sobotnie Ważenia",
+  "short_name": "Redukcja Pro",
+  "description": "Aplikacja PWA do śledzenia redukcji masy ciała i tkanki tłuszczowej z cotygodniowymi sobotnimi kamieniami milowymi oraz automatyczną korekcją celu.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#10b981",
+  "lang": "pl-PL",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
