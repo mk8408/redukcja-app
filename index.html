@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Redukcyjny 93kg -> 76.6kg</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 16px; line-height: 1.5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 24px; padding: 20px; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
+        h1 { font-size: 1.5rem; margin-bottom: 8px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p.subtitle { color: var(--text-muted); font-size: 0.9rem; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .stat-card h3 { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .stat-card .value { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+        
+        .progress-container { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; }
+        .progress-bar-bg { background: var(--border); height: 10px; border-radius: 5px; overflow: hidden; margin-top: 8px; }
+        .progress-bar-fill { background: var(--accent-gradient); height: 100%; width: 0%; transition: width 0.5s ease; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; min-width: 600px; }
+        th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        th { background: rgba(51, 65, 85, 0.4); color: var(--text-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+        tr:hover { background: rgba(51, 65, 85, 0.2); }
+        
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #2563eb; cursor: pointer; }
+        input[type="number"] { background: var(--bg-color); border: 1px solid var(--border); color: var(--text-color); padding: 6px 10px; border-radius: 6px; width: 85px; font-weight: 600; text-align: center; }
+        input[type="number"]:focus { outline: none; border-color: var(--accent); }
+        
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge-on-track { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge-ahead { background: rgba(56, 189, 248, 0.2); color: var(--accent); }
+        .badge-behind { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-pending { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
+        
+        .actions-bar { margin-top: 16px; display: flex; justify-content: flex-end; gap: 10px; }
+        button { background: var(--border); color: var(--text-color); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: background 0.2s; }
+        button:hover { background: #475569; }
+        button.btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        button.btn-danger:hover { background: rgba(239, 68, 68, 0.4); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Redukcja 93kg ➔ 76.6kg</h1>
+        <p class="subtitle">Cel: 15% BF do 23.04.2027 | Sobotnie ważenie & Checklista</p>
+    </header>
+
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <h3>Start / Obecnie</h3>
+            <div class="value" id="currentWeightDisplay">93.0 kg</div>
+        </div>
+        <div class="stat-card">
+            <h3>Zrzucono</h3>
+            <div class="value" id="totalLostDisplay">0.0 kg</div>
+        </div>
+        <div class="stat-card">
+            <h3>Ukończone tygodnie</h3>
+            <div class="value" id="completedWeeksDisplay">0 / 26</div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+            <span>Postęp całkowity</span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="checklistTable">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Done</th>
+                    <th>Tydzień / Data</th>
+                    <th>Cel wagowy</th>
+                    <th>Twoja waga (Sobota)</th>
+                    <th>Status korekcji</th>
+                    <th>Zadanie nawykowe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Generowane dynamicznie -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions-bar">
+        <button class="btn-danger" onclick="resetData()">Resetuj dane</button>
+    </div>
+</div>
+
+<script>
+    // Rejestracja Service Workera dla trybu PWA (offline)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker zarejestrowany poprawnie.'))
+        .catch(err => console.log('Błąd rejestracji Service Workera:', err));
+    }
+
+    const startDate = new Date(2026, 9, 26); 
+    const startWeight = 93.0;
+    const targetWeight = 76.6;
+    const totalWeeks = 26;
+    const weightLossPerWeek = (startWeight - targetWeight) / totalWeeks;
+
+    const weeksData = [];
+    let curr = new Date(startDate);
+    for(let i=1; i<=totalWeeks; i++) {
+        let startWk = new Date(curr);
+        curr.setDate(curr.getDate() + 6);
+        let endWk = new Date(curr);
+        curr.setDate(curr.getDate() + 1);
+
+        let targetW = +(startWeight - (weightLossPerWeek * i)).toFixed(1);
+        if(i === totalWeeks) targetW = targetWeight;
+
+        weeksData.push({
+            week: i,
+            dates: `${formatDate(startWk)} - ${formatDate(endWk)}`,
+            target: targetW,
+            task: getTaskDescription(i)
+        });
+    }
+
+    function formatDate(d) {
+        return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
+    }
+
+    function getTaskDescription(week) {
+        const tasks = [
+            "Uruchomienie logistyki cateringu (3000 kcal/2 dni) + Bakoma wieczorem.",
+            "Pilnowanie nawodnienia (min. 3L wody) + włączenie pyłku sosny.",
+            "Nawyk 8000-10000 kroków codziennie w dni nietreningowe.",
+            "Pierwsze podsumowanie miesiąca – weryfikacja spadku wagi.",
+            "Pilnowanie stałych godzin snu i regularnego Sleep-era.",
+            "Zwiększenie intensywności progresji w kalistenice (3x w tygodniu).",
+            "Analiza techniki wykonywanych ćwiczeń (pompki, podciąganie).",
+            "Przetrwanie okresu przedświątecznego bez podjadania.",
+            "Kontrola świąteczna – utrzymanie deficytu lub powrót od razu na tory.",
+            "Sylwestrowy reset i dyscyplina suplementacyjna w Nowym Roku.",
+            "Weryfikacja obwodów ciała (pas, klatka, ramiona).",
+            "Półmetek I kwartału – utrwalenie nawyku kroków w pracy.",
+            "Przegląd suplementacji – uzupełnienie apteczki na kolejne miesiące.",
+            "Dodanie 15-minutowego rozciągania kręgosłupa po pracy siedzącej.",
+            "Kontrola energii i libido – weryfikacja pyłku sosny i Tribulonu.",
+            "Utrzymanie tempa spadku – w razie potrzeby więcej spacerów.",
+            "Zamknięcie 4 miesiąca – spadek o ponad 10 kg za Tobą!",
+            "Ocena stawów i ścięgien – wsparcie kolagenem przy kalistenice.",
+            "Wiosenne ożywienie – wydłużenie weekendowych spacerów.",
+            "Kontrola składu ciała i sprawdzenie ubytku tłuszczu z brzucha.",
+            "Pilnowanie snu ze Sleep-erem w okresie przesilenia wiosennego.",
+            "Próg poniżej 80 kg – symboliczny moment przełomowy!",
+            "Święta Wielkanocne – pełna kontrola logistyki posiłków.",
+            "Ostatnia prosta – maksymalne skupienie na treningach.",
+            "Ostatnie szlify – waga oscyluje bardzo blisko celu.",
+            "Finał! Osiągnięcie 15% BF i świętowanie sukcesu (23 kwietnia 2027)."
+        ];
+        return tasks[week-1] || "Konsekwencja w planie.";
+    }
+
+    function initTable() {
+        const tbody = document.querySelector('#checklistTable tbody');
+        tbody.innerHTML = '';
+        let savedData = JSON.parse(localStorage.getItem('red_data') || '{}');
+
+        weeksData.forEach(w => {
+            let rowData = savedData[w.week] || { checked: false, weight: '' };
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="checkbox" data-week="${w.week}" class="chk-box" ${rowData.checked ? 'checked' : ''}></td>
+                <td><strong>Tydzień ${w.week}</strong><br><small style="color:var(--text-muted);">${w.dates}</small></td>
+                <td>${w.target} kg</td>
+                <td><input type="number" step="0.1" class="weight-input" data-week="${w.week}" value="${rowData.weight || ''}" placeholder="np. 92.5"></td>
+                <td><span class="badge badge-pending" id="badge-${w.week}">Oczekiwanie</span></td>
+                <td style="font-size:0.85rem; color:var(--text-muted);">${w.task}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        attachEvents();
+        updateDashboard();
+    }
+
+    function attachEvents() {
+        document.querySelectorAll('.chk-box').forEach(chk => chk.addEventListener('change', saveData));
+        document.querySelectorAll('.weight-input').forEach(inp => inp.addEventListener('input', saveData));
+    }
+
+    function saveData() {
+        let dataToSave = {};
+        document.querySelectorAll('#checklistTable tbody tr').forEach((tr, index) => {
+            let week = index + 1;
+            let checked = tr.querySelector('.chk-box').checked;
+            let weight = tr.querySelector('.weight-input').value;
+            dataToSave[week] = { checked, weight };
+        });
+        localStorage.setItem('red_data', JSON.stringify(dataToSave));
+        updateDashboard();
+    }
+
+    function updateDashboard() {
+        let savedData = JSON.parse(localStorage.getItem('red_data') || '{}');
+        let completedCount = 0;
+        let lastWeight = startWeight;
+
+        weeksData.forEach(w => {
+            let d = savedData[w.week];
+            let badge = document.getElementById(`badge-${w.week}`);
+            if(!badge) return;
+
+            if(d && d.checked) completedCount++;
+
+            if(d && d.weight && !isNaN(parseFloat(d.weight))) {
+                let wVal = parseFloat(d.weight);
+                lastWeight = wVal;
+                let diff = +(wVal - w.target).toFixed(1);
+                if(diff <= -0.5) {
+                    badge.className = "badge badge-ahead";
+                    badge.innerText = `Super (${diff}kg)`;
+                } else if(diff >= 0.8) {
+                    badge.className = "badge badge-behind";
+                    badge.innerText = `Opóźnienie (+${diff}kg)`;
+                } else {
+                    badge.className = "badge badge-on-track";
+                    badge.innerText = "Plan wykonany";
+                }
+            } else {
+                badge.className = "badge badge-pending";
+                badge.innerText = "Brak pomiaru";
+            }
+        });
+
+        document.getElementById('currentWeightDisplay').innerText = `${lastWeight.toFixed(1)} kg`;
+        let lost = +(startWeight - lastWeight).toFixed(1);
+        document.getElementById('totalLostDisplay').innerText = `${lost > 0 ? '+' : ''}${lost} kg`;
+        document.getElementById('completedWeeksDisplay').innerText = `${completedCount} / ${totalWeeks}`;
+
+        let percent = Math.round((completedCount / totalWeeks) * 100);
+        document.getElementById('progressBar').style.width = `${percent}%`;
+        document.getElementById('progressPercent').innerText = `${percent}%`;
+    }
+
+    function resetData() {
+        if(confirm("Czy na pewno chcesz zresetować wszystkie zapisane dane i wagi?")) {
+            localStorage.removeItem('red_data');
+            initTable();
+        }
+    }
+
+    window.onload = initTable;
+</script>
+</body>
+</html>
